@@ -27,6 +27,9 @@
       box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
       margin: 10px;
     }
+	.canvas-container h3 {
+	  text-align: center;
+	}
     #controls {
       text-align: center;
       margin-bottom: 20px;
@@ -56,13 +59,13 @@
 </header>
 
 <div id="controls">
-  <label for="componentSlider">Sine Components:</label>
-  <input type="range" id="componentSlider" min="1" max="30" value="15">
-  <span id="componentCount">15</span>
+  <label for="componentSlider">Sine Components (1 Hz Each):</label>
+  <input type="range" id="componentSlider" min="1" max="50" value="50">
+  <span id="componentCount">50</span>
   <button id="resetBtn">Reset Drawing</button>
   <br>
   <!-- Template buttons -->
-  <button id="btnSquare">Square Wave (5Hz)</button>
+  <button id="btnSquare">Square Wave (1Hz)</button>
   <button id="btnWhiteNoise">White Noise</button>
   <button id="btnPinkNoise">Pink-ish Noise</button>
   <button id="btnTriangle">Triangle Wave (5Hz)</button>
@@ -95,7 +98,7 @@ const N = 1000;         // Use 1000 samples for high resolution
 let drawingDomain = [];   // Points: x in [0,1], y in [-1,1]
 let sampledSignal = [];   // Resampled signal (length N)
 let fourierData = [];     // DFT results
-let numComponents = 15;   // Initial slider value
+let numComponents = 50;   // Initial slider value
 let needsDFT = false;     // Flag to trigger DFT recalculation
 
 // Define plot margins
@@ -217,7 +220,7 @@ function sumComponents(fourierData, numComps, t) {
 /*************************************************************
  * TEMPLATE WAVE GENERATORS (Direct Generation over 1s)
  *************************************************************/
-function generateSquareWave(freq = 5, numPoints = 1000) {
+function generateSquareWave(freq = 1, numPoints = 1000) {
   let points = [];
   for (let i = 0; i < numPoints; i++) {
     let t = i / (numPoints - 1);
@@ -438,7 +441,7 @@ let psdP5 = function(p) {
   };
   p.draw = function() {
     p.background(255);
-    let fMin = 0, fMax = 30;
+    let fMin = 0, fMax = 50;
     let maxAmp = 0;
     for (let d of fourierData) {
       if (d.freqHz <= fMax && d.amp > maxAmp) {
@@ -480,10 +483,10 @@ function drawTimeAmpAxes(p, xMin, xMax, yMin, yMax, xLabel, yLabel) {
   p.line(marginLeft, xAxisY, marginLeft + plotW, xAxisY);
   p.line(marginLeft, marginTop, marginLeft, marginTop + plotH);
   p.textAlign(p.CENTER, p.TOP);
-  p.text(xLabel, marginLeft + plotW / 2, xAxisY + 20);
+  p.text(xLabel, marginLeft + plotW / 2, xAxisY + 40);
   p.textAlign(p.RIGHT, p.CENTER);
   p.push();
-  p.translate(marginLeft - 30, marginTop + plotH / 2);
+  p.translate(marginLeft - 40, marginTop + plotH / 2);
   p.rotate(-p.HALF_PI);
   p.text(yLabel, 0, 0);
   p.pop();
@@ -524,14 +527,14 @@ function drawFreqAmpAxes(p, fMin, fMax, aMin, aMax, xLabel, yLabel) {
   p.line(marginLeft, xAxisY, marginLeft + plotW, xAxisY);
   p.line(marginLeft, marginTop, marginLeft, marginTop + plotH);
   p.textAlign(p.CENTER, p.TOP);
-  p.text(xLabel, marginLeft + plotW / 2, xAxisY + 20);
+  p.text(xLabel, marginLeft + plotW / 2, xAxisY + 40);
   p.textAlign(p.RIGHT, p.CENTER);
   p.push();
-  p.translate(marginLeft - 30, marginTop + plotH / 2);
+  p.translate(marginLeft - 40, marginTop + plotH / 2);
   p.rotate(-p.HALF_PI);
   p.text(yLabel, 0, 0);
   p.pop();
-  let numXTicks = 3;
+  let numXTicks = 10;
   for (let i = 0; i <= numXTicks; i++) {
     let frac = i / numXTicks;
     let freqVal = fMin + frac * (fMax - fMin);
@@ -581,7 +584,7 @@ document.getElementById("resetBtn").addEventListener("click", function() {
 
 // BUTTON HOOKS TO LOAD TEMPLATE WAVES
 document.getElementById("btnSquare").addEventListener("click", () => {
-  drawingDomain = generateSquareWave(5, 1000);
+  drawingDomain = generateSquareWave(1, 1000);
   needsDFT = true;
 });
 document.getElementById("btnWhiteNoise").addEventListener("click", () => {
@@ -607,6 +610,9 @@ document.getElementById("btnSine10Hz3Hz").addEventListener("click", () => {
 document.getElementById("btnMultiSine").addEventListener("click", () => {
   drawingDomain = generateMultiSine(1000);
   needsDFT = true;
+});
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById("btnSquare").click();
 });
 </script>
 </body>
