@@ -55,7 +55,7 @@
 <body>
 <header>
   <h1>Fourier Wave Creator</h1>
-  <p>Draw or load template waves (mean centered) to see their Fourier reconstruction and PSD.</p>
+  <p>Click the buttons to see the Fourier reconstruction and PSD for example waveforms. Click 'Reset Drawing' to clear the Canvas and then draw in the box to make a custom waveform.</p>Drag the slider to hide higher frequency components.</p>
 </header>
 
 <div id="controls">
@@ -398,7 +398,7 @@ let reconP5 = function(p) {
     // Draw individual sine components, scaled using the same factor
     for (let cIdx = 0; cIdx < Math.min(numComponents, fourierData.length); cIdx++) {
       let comp = fourierData[cIdx];
-      p.stroke(150, 150, 255, 150);
+      p.stroke(158, 1, 166, 100);
       p.strokeWeight(1);
       p.noFill();
       p.beginShape();
@@ -459,7 +459,7 @@ let psdP5 = function(p) {
       if (d.freqHz > fMax) break;
       let xPos = mapRange(d.freqHz, fMin, fMax, 0, plotW);
       let yPos = mapRange(d.amp, 0, maxAmp, plotH, 0);
-      if (k < numComponents) p.fill(100, 150, 255);
+      if (k < numComponents) p.fill(0, 0, 200);
       else p.fill(200);
       p.noStroke();
       p.rect(xPos - barWidth * 0.5, yPos, barWidth, plotH - yPos);
